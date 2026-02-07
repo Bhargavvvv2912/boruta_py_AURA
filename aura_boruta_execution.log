@@ -1,0 +1,136 @@
+
+::group::Analyzing Codebase for Update Risk
+Usage scores calculated.
+::endgroup::
+INFO: Found pinned requirements. Running initial health check and regenerating lockfile...
+
+::group::Initial Baseline Health Check
+--> Bootstrap Step 1: Installing dependencies from 'requirements.txt'...
+--> Running command: '/home/runner/work/boruta_py_AURA/boruta_py_AURA/initial_check_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/boruta_py_AURA/boruta_py_AURA/requirements.txt' in CWD: '.'
+
+--> Bootstrap Step 2: Installing project from current directory ('.') in editable mode...
+--> Running command: '/home/runner/work/boruta_py_AURA/boruta_py_AURA/initial_check_venv/bin/python -m pip install --no-build-isolation -e .' in CWD: '.'
+
+--> Bootstrap Step 3: Running validation suite...
+
+::group::Running Validation
+
+--- Running Smoke Test ---
+--> Running command: '/home/runner/work/boruta_py_AURA/boruta_py_AURA/initial_check_venv/bin/python /home/runner/work/boruta_py_AURA/boruta_py_AURA/validation_boruta.py' in CWD: '.'
+Smoke test PASSED.
+::endgroup::
+--> Running command: '/home/runner/work/boruta_py_AURA/boruta_py_AURA/initial_check_venv/bin/python -m pip freeze' in CWD: '.'
+Initial baseline is valid and stable. Overwriting requirements file with clean, frozen state.
+::endgroup::
+INFO: Dependency graph metrics not found. Entanglement scores will be 0.
+
+::group::UPDATE PASS 1/3
+
+Prioritized Update Plan for this Pass (Highest Risk First):
+Rank  | Package                        | % of Total Risk    | Change
+----- | ------------------------------ | ------------------ | --------------------
+1     | pandas                         | 40.00             % | 2.2.0 -> 3.0.0
+2     | numpy                          | 40.00             % | 1.26.4 -> 2.4.2
+3     | scikit-learn                   | 20.00             % | 1.5.2 -> 1.8.0
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 1/3] Processing 'pandas'
+PULSE: Changed packages this pass so far: set()
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to pandas==3.0.0
+
+::group::Probe: Install & Validate for pandas==3.0.0
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/boruta_py_AURA/boruta_py_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/boruta_py_AURA/boruta_py_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+::endgroup::
+
+--> Toplevel Result: Direct update FAILED. Reason: 'Dependency installation failed: The root cause of the dependency conflict is that the build process for `boruta_py_AURA` fails to prepare editable metadata because the dependency requirement `'numpy==1.26.4'` is incorrectly executed as a line of code within the project's setup script.'
+    Suspected Blockers (Regex): ['numpy', 'string', 'module']
+--> Action: Entering Level 1 Healing with 'Filter-Then-Scan' strategy.
+
+::group::Healing 'pandas': Filter-Then-Scan Strategy
+
+--- Phase 1: Filtering for compatible versions ---
+  -> Checking compatibility of pandas==3.0.0...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is `setuptools` failing to prepare editable metadata for `boruta_py_AURA` in a `python3.11` environment, which resulted in an `exit code: 1`.
+  -> Checking compatibility of pandas==2.3.3...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is a `subprocess-exited-with-error` during metadata preparation by `setuptools` (initiated by `pip` within a Python 3.11 environment), with the log not providing explicit details on the specific conflicting package versions beyond the Python runtime.
+  -> Checking compatibility of pandas==2.3.2...
+     -- Incompatible. Diagnosis: The dependency conflict originates from an incompatibility within the `setuptools` package's `_distutils` component, causing a build failure during metadata preparation in the Python 3.11 environment.
+  -> Checking compatibility of pandas==2.3.1...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is that `setuptools` failed to prepare editable metadata for the project, triggering an exit code 1 error during its `setup()` execution within a `python3.11` environment, though specific conflicting package versions beyond Python 3.11 are not explicitly detailed in the provided log.
+  -> Checking compatibility of pandas==2.3.0...
+     -- Incompatible. Diagnosis: The root cause is an undisclosed dependency conflict preventing `setuptools` from successfully preparing editable metadata for the package within a `python3.11` environment.
+  -> Checking compatibility of pandas==2.2.3...
+     -- Incompatible. Diagnosis: The root cause is an incompatibility leading to a build error within setuptools (sourced from `/home/runner/work/boruta_py_AURA/boruta_py_AURA/temp_pip_check/lib/python3.11/site-packages/setuptools/`) during metadata preparation for an editable package in a Python 3.11 environment, specifically failing to initialize a distribution class.
+  -> Checking compatibility of pandas==2.2.2...
+     -- Incompatible. Diagnosis: The dependency conflict is rooted in `setuptools`'s inability to successfully prepare editable metadata for the project within the `python3.11` environment, likely due to an incompatibility between the project's build requirements and the version of `setuptools` being utilized.
+  -> Checking compatibility of pandas==2.2.1...
+     -- Incompatible. Diagnosis: The root cause is a build-time incompatibility where `setuptools` failed to prepare editable metadata for the project in a Python `3.11` environment, likely due to its reliance on deprecated `distutils` components.
+
+--- Phase 2: Validating compatible versions (newest first) ---
+Result: No compatible versions were found. Reverting to last known good version.
+::endgroup::
+
+--> Action: Level 1 Healing failed for 'pandas'. Escalating to Level 2 'Iterative Greedy Expansion'.
+
+    -> [Greedy Expansion Iteration 1/5]
+       Current Conflict Cluster: {'string', 'module'}
+       Updatable Candidates: []
+       CRITICAL: Blockers identified, but they are already at max version.
+       Aborting to prevent regression. Co-Resolution impossible.
+  -> Result for pandas: Reverted/Kept at 2.2.0 (No Change).
+
+--------------------------------------------------------------------------------
+PULSE: [PASS 1 | ATTEMPT 2/3] Processing 'numpy'
+PULSE: Changed packages this pass so far: set()
+--------------------------------------------------------------------------------
+
+--> Toplevel Attempt: Trying direct update to numpy==2.4.2
+
+::group::Probe: Install & Validate for numpy==2.4.2
+--> Probe Step 1: Installing the proposed dependency set...
+--> Running command: '/home/runner/work/boruta_py_AURA/boruta_py_AURA/temp_venv/bin/python -m pip install --no-build-isolation --no-cache-dir -r /home/runner/work/boruta_py_AURA/boruta_py_AURA/temp_venv/probe_requirements.txt' in CWD: '.'
+::endgroup::
+
+--> Toplevel Result: Direct update FAILED. Reason: 'Dependency installation failed: The build process failed because an invalid `numpy` version `numpy==2.4.2` was specified, leading to an error during the preparation of editable metadata.'
+    Suspected Blockers (Regex): ['numpy', 'string', 'module']
+--> Action: Entering Level 1 Healing with 'Filter-Then-Scan' strategy.
+
+::group::Healing 'numpy': Filter-Then-Scan Strategy
+
+--- Phase 1: Filtering for compatible versions ---
+  -> Checking compatibility of numpy==2.4.2...
+     -- Incompatible. Diagnosis: The dependency conflict stems from a failure in `setuptools` to successfully prepare editable metadata for `boruta_py_AURA` (commit `4d755e7ed3d2be551c9cf74e2737dd80e14f628c`), suggesting an incompatibility during the build process executed by `pip` within the Python 3.11 environment.
+  -> Checking compatibility of numpy==2.4.1...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is `setuptools` failing to prepare editable metadata for the project within the `python3.11` environment, indicating an incompatibility with the project's build configuration or unstated dependencies.
+  -> Checking compatibility of numpy==2.4.0...
+     -- Incompatible. Diagnosis: The root cause is a dependency conflict where `setuptools` failed to prepare editable metadata for the `boruta_py_AURA` project in a Python 3.11 environment, indicating an incompatibility between the project's build requirements and the specific Python version or the implicitly used `setuptools` version.
+  -> Checking compatibility of numpy==2.3.5...
+     -- Incompatible. Diagnosis: The root cause is a dependency conflict where `setuptools` failed to prepare editable metadata for the project in the Python 3.11 environment, likely due to an incompatibility with the project's build configuration.
+  -> Checking compatibility of numpy==2.3.4...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is an unspecified incompatibility within the `setuptools` build process during editable metadata preparation in a `python3.11` environment, as specific versions for `pip` or `setuptools` involved in the conflict are not explicitly detailed in the provided log.
+  -> Checking compatibility of numpy==2.3.3...
+     -- Incompatible. Diagnosis: The dependency conflict is rooted in an unhandled error within the `setuptools` build backend, specifically its `build_meta.py` module found at `/home/runner/work/boruta_py_AURA/boruta_py_AURA/temp_pip_check/lib/python3.11/site-packages/setuptools/`, which prevents the successful preparation of editable metadata for the project under Python 3.11.
+  -> Checking compatibility of numpy==2.3.2...
+     -- Incompatible. Diagnosis: The root cause is a `subprocess-exited-with-error` originating from `setuptools` during the preparation of editable metadata within a `python3.11` environment, though the provided log does not explicitly specify a dependency conflict or the exact package versions involved.
+  -> Checking compatibility of numpy==2.3.1...
+     -- Incompatible. Diagnosis: The dependency conflict is caused by `setuptools` and `pip` components failing to prepare editable metadata for a package within a `Python 3.11` environment, indicating an incompatibility that prevents the build process from completing.
+  -> Checking compatibility of numpy==2.3.0...
+     -- Incompatible. Diagnosis: The dependency conflict stems from `setuptools` failing to successfully prepare editable metadata for the project under Python 3.11, indicated by an exit code 1 when attempting to execute the project's `setup()` function.
+  -> Checking compatibility of numpy==2.2.6...
+     -- Incompatible. Diagnosis: The dependency conflict is a build-time failure within `setuptools` (running on `python3.11`) that prevents preparing editable metadata, specifically caused by an internal error when calling `distutils.core.setup`.
+  -> Checking compatibility of numpy==2.2.5...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is an unspecified internal error within `setuptools` during the preparation of editable metadata for a package, encountered in a `python3.11` environment, but the specific conflicting package versions are not explicitly detailed in this log.
+  -> Checking compatibility of numpy==2.2.4...
+     -- Incompatible. Diagnosis: The root cause of the dependency conflict is a build failure during `setuptools`'s preparation of editable metadata (triggered by `pip`) in a `python3.11` environment, due to an unspecified error when executing the project's setup script.
+  -> Checking compatibility of numpy==2.2.3...
+     -- Incompatible. Diagnosis: The provided log indicates a build failure within `setuptools` during the preparation of editable package metadata, rather than an explicit dependency conflict, with the issue occurring in a Python 3.11 environment.
+  -> Checking compatibility of numpy==2.2.2...
+     -- Incompatible. Diagnosis: The root cause is an internal build error within `setuptools`, preventing `pip` from successfully preparing editable metadata from `pyproject.toml` on Python 3.11, due to an unspecified issue during the build process.
+  -> Checking compatibility of numpy==2.2.1...
+     -- Incompatible. Diagnosis: The root cause is a dependency conflict where the `setuptools` package (located at `site-packages/setuptools/`) failed with `exit code: 1` during the preparation of editable metadata for `pyproject.toml`, a process orchestrated by the `pip` package (located at `site-packages/pip/`), indicating an incompatibility between the project's build configuration and these specific installed build tool versions.
+  -> Checking compatibility of numpy==2.2.0...
+     -- Incompatible. Diagnosis: The root cause is an incompatibility leading to a build failure during editable metadata preparation, indicating an issue with the `setuptools` build backend when executed in the `python3.11` environment.
+  -> Checking compatibility of numpy==2.1.3...

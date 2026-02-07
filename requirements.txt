@@ -1,3 +1,11 @@
+-e git+https://github.com/Bhargavvvv2912/boruta_py_AURA@4d755e7ed3d2be551c9cf74e2737dd80e14f628c#egg=Boruta
+joblib==1.5.3
 numpy==1.26.4
 pandas==2.2.0
+python-dateutil==2.9.0.post0
+pytz==2025.2
 scikit-learn==1.5.2
+scipy==1.17.0
+six==1.17.0
+threadpoolctl==3.6.0
+tzdata==2025.3
